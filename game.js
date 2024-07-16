@@ -71,15 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const pipe = document.createElement('div');
         const topPipe = document.createElement('img');
         const bottomPipe = document.createElement('img');
-        const star = document.createElement('div');
+        const star = document.createElement('img');
 
         if (!isGameOver) {
             pipe.classList.add('pipe');
             topPipe.src = 'img/toppipe.png';
             topPipe.classList.add('top-pipe');
             bottomPipe.src = 'img/bottompipe.png';
+            bottomPipe.src = 'img/star.png';
             bottomPipe.classList.add('bottom-pipe');
-            star.classList.add('star');
 
             pipe.appendChild(topPipe);
             pipe.appendChild(bottomPipe);
