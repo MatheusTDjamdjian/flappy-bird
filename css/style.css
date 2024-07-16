@@ -1,0 +1,86 @@
+@charset "UTF-8";
+@font-face {
+    font-family: 'Gamer';
+    src: url('/font/Gamer.ttf') format('truetype');
+}
+/* Tilte */
+.bona-nova-sc-regular {
+    color: brown;
+    font-family: "Bona Nova SC", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 26px;
+    text-align: center;
+}
+.bd {
+    margin-top: -15px;
+}
+/* Controls */
+.play {
+    background: transparent;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    text-shadow: #00000093 1px 2px 4px;
+    box-shadow: #2f9aa6 0px 0px 4px;
+    border: transparent;
+    font-family: 'Gamer';
+    color: brown;
+    font-size: 25px;
+    top: 50%;
+    left: 50%;
+    width: 160px;
+    padding: 6px 6px;
+}
+.reset {
+    background: transparent;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    text-shadow: #00000093 1px 2px 4px;
+    box-shadow:  #2f9aa6 0px 0px 4px;
+    border: transparent;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    margin-top: 100px;
+}
+.txt-reset {
+    font-family: 'Bona Nova SC';
+    color: rgb(23, 107, 0);
+    font-weight: 1000;
+}
+.changa-controls {
+    font-family: "Changa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    color: brown;
+    margin: 4px 8px 4px 8px;
+}
+/* Game */
+.game {
+    background-image: url('/img/flappybirdbg.png');
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 360px;
+    height: 640px;
+}
+.bird {
+    width: 34px;
+    height: 24px;
+    display: none; /* temp */
+}
+.pipe {
+    display: inline-block;
+    display: none; /* temp */
+}
+.top-pipe {
+    height: 150px;
+    width: 40px;
+}
+.bottom-pipe {
+    height: 150px;
+    width: 40px;
+}

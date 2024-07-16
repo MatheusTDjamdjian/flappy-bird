@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="shortcut icon" href="img/flappybird.png" type="image/x-icon">
+    <!-- -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC&display=swap" rel="stylesheet">
+    <!-- -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa&display=swap" rel="stylesheet">
+
+    <title>Flappy Bird</title>
+</head>
+<body class="container">
+<div class="game">
+    <div class="menu" id="menu">
+        <div class="bona-nova-sc-regular">
+            <h1>Flappy</h1>
+            <h2 class="bd">Bird</h2>
+        </div>
+        <div class="recorde" id="recorde">
+
+        </div>
+        <div class="controls">
+            <div>
+                <button class="play" id="play" onclick()>
+                    <p>Jogar</p>
+                </button>
+            </div>
+            <div class="controls">
+                <button class="reset" id="reset" onclick()>
+                    <p class="txt-reset">Resetar recorde</p>
+                </button>
+            </div>
+        </div>
+    </div>
+    <img src="img/flappybird.png" alt="" class="bird" id="bird">
+    <div class="pipe" id="pipe">
+        <img src="img/toppipe.png" class="top-pipe" id="tpipe">
+        <img src="img/bottompipe.png" class="bottom-pipe" id="bpipe">
+    </div>
+</div>
+<div>   
+<script src="game.js"></script>
+</body>
+</html>
