@@ -1,8 +1,10 @@
 @charset "UTF-8";
+
 @font-face {
     font-family: 'Gamer';
     src: url('/font/Gamer.ttf') format('truetype');
 }
+
 /* Tilte */
 .bona-nova-sc-regular {
     color: brown;
@@ -25,11 +27,10 @@
     border: transparent;
     font-family: 'Gamer';
     color: brown;
-    font-size: 25px;
+    font-size: 22px;
     top: 50%;
     left: 50%;
     width: 160px;
-    padding: 6px 6px;
 }
 .reset {
     background: transparent;
@@ -66,21 +67,33 @@
     left: 50%;
     width: 360px;
     height: 640px;
+    overflow: hidden;
 }
 .bird {
     width: 34px;
     height: 24px;
-    display: none; /* temp */
+    position: absolute;
+    display: none;
+    animation: flappyBird 1s infinite linear;
 }
 .pipe {
-    display: inline-block;
+    position: absolute;
     display: none; /* temp */
 }
 .top-pipe {
     height: 150px;
     width: 40px;
+    position: absolute;
 }
-.bottom-pipe {
+.bottom-ppipe {
     height: 150px;
     width: 40px;
+    position: absolute;
+}
+.star {
+    width: 20px;
+    height: 20px;
+    background-color: gold;
+    border-radius: 50%;
+    position: absolute;
 }
