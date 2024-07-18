@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     gameDisplay.appendChild(scoreDisplay);
 
     let birdLeft = 50;
-    let birdBottom = 50;
-    let jumpVelocity = 10;
-    let gravity = 0.5;
+    let birdBottom = 0;
+    let jumpVelocity = 0;
     let isGameOver = false;
     let gap = 250;
     let score = 0;
@@ -21,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let passedPipes = 0;
     let gameLoop;
     let pipes = [];
-    let stars = []; 
+    let stars = [];
+    
+    const gravity = 0.5;
+    const initialJumpVelocity = 7;
 
     playButton.addEventListener('click', startGame);
     resetButton.addEventListener('click', resetRecorde);
@@ -67,16 +69,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateScoreDisplay();
     }
-
+    
     function jump() {
-        birdBottom -= jumpVelocity;
+        birdBottom += jumpVelocity;
         jumpVelocity -= gravity;
-        
-        if (birdBottom > 540) {
-            birdBottom = 540;
-            jumpVelocity = 10;
+    
+        if (birdBottom < 0) {
+            birdBottom = 0;
+            jumpVelocity = 0;
+        }
+    
+        if (birdBottom > jumpHeight) {
+            birdBottom = jumpHeight;
+            jumpVelocity = 0;
         }
     }
+    
+    function startJump() {
+        jumpVelocity = initialJumpVelocity;
+    }
+    
+    document.addEventListener('keyup', (e) => {
+        if (e.keyCode === 32) {
+            startJump();
+        }
+    });
+    
+    setInterval(() => {
+        jump();
+        console.log(birdBottom);
+    }, 20);
 
     document.addEventListener('keyup', control);
 
