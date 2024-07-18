@@ -10,8 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gameDisplay.appendChild(scoreDisplay);
 
     let birdLeft = 50;
-    let birdBottom = 100;
-    let gravity = 2;
+    let birdBottom = 50;
+    let jumpVelocity = 10;
+    let gravity = 0.5;
     let isGameOver = false;
     let gap = 250;
     let score = 0;
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menu.style.display = 'none';
         scoreDisplay.style.display = 'block';
         clearInterval(gameLoop);
-        gameLoop = setInterval(game, 20);
+        gameLoop = setInterval(game, 8);
         generatePipes();
     }
 
@@ -68,7 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function jump() {
-        if (birdBottom < 500) birdBottom += 50;
+        birdBottom -= jumpVelocity;
+        jumpVelocity -= gravity;
+        
+        if (birdBottom > 540) {
+            birdBottom = 540;
+            jumpVelocity = 10;
+        }
     }
 
     document.addEventListener('keyup', control);
@@ -77,6 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.keyCode === 32) {
             jump();
         }
+    }
+
+    function randomIntFromInterval(min, max) { 
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     function generatePipes() {
@@ -96,12 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
             gameDisplay.appendChild(pipe);
 
             let pipeLeft = 360;
-            let randomHeight = Math.random() * 100; 
+            let randomHeight = randomIntFromInterval(100, 180); 
+            let randomHeightTop = randomIntFromInterval(100, 180); 
             let pipeBottom = randomHeight;
+            let pipeTop = randomHeightTop;
 
             pipe.style.left = pipeLeft + 'px';
-            pipe.style.bottom = pipeBottom + 'px';
-            topPipe.style.bottom = pipeBottom + gap + 'px';
+            topPipe.style.top = (pipeTop * -1) + 'px';
+            bottomPipe.style.bottom = (pipeBottom * - 1) + 'px';
+
+            console.log(pipeBottom);
 
             if (Math.random() < 0.3) {
                 const star = document.createElement('img');
@@ -140,15 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     passedPipes++;
                     updateScore();
                     pipes = pipes.filter(p => p !== pipe); 
-                }
-
-                if (
-                    (pipeLeft > 200 && pipeLeft < 280 && birdLeft === 220 &&
-                        (birdBottom < pipeBottom + 150 || birdBottom > pipeBottom + gap - 200)) ||
-                    birdBottom === 0
-                ) {
-                    gameOver();
-                    clearInterval(timerId);
                 }
             }
 

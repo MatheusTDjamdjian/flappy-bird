@@ -74,7 +74,7 @@ body {
 .game {
     background-image: url('/img/flappybirdbg.png');
     position: absolute;
-    top: 0;
+    top: 3%;
     left: 50%;
     transform: translateX(-50%);
     width: 360px;
@@ -86,11 +86,15 @@ body {
     height: 24px;
     position: absolute;
     display: none;
-    animation: flappyBird 1s infinite linear;
 }
 .pipe {
     position: absolute;
-    margin-bottom: 80px;
+    height: 100%;
+}
+.pipe img {
+    position: absolute;
+    width: 49px;
+    height: 392px;
 }
 
 .top-pipe {
