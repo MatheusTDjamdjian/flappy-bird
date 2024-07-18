@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let starPoints = 10;
     let passedPipes = 0;
     let gameLoop;
-    let pipes = []; 
+    let pipes = [];
     let stars = []; 
 
     playButton.addEventListener('click', startGame);

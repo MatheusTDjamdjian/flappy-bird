@@ -64,6 +64,13 @@ body {
     padding: 0;
     overflow: hidden;
 }
+
+.container {
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
 .game {
     background-image: url('/img/flappybirdbg.png');
     position: absolute;
@@ -83,17 +90,17 @@ body {
 }
 .pipe {
     position: absolute;
+    margin-bottom: 80px;
 }
+
 .top-pipe {
-    height: 150px;
+    height: 200px;
     width: 40px;
     position: absolute;
-    transform: rotate(180deg);
 }
 .bottom-pipe {
     height: 150px;
     width: 40px;
-    position: absolute;
 }
 .star {
     width: 20px;
