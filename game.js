@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let birdBottom = 100;
     let gravity = 2;
     let isGameOver = false;
-    let gap = 430;
+    let gap = 250;
     let score = 0;
     let starScore = 0;
     let starPoints = 10;
     let passedPipes = 0;
     let gameLoop;
+    let pipes = []; 
+    let stars = []; 
 
     playButton.addEventListener('click', startGame);
     resetButton.addEventListener('click', resetRecorde);
@@ -81,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const pipe = document.createElement('div');
         const topPipe = document.createElement('img');
         const bottomPipe = document.createElement('img');
-        const star = document.createElement('img');
 
         if (!isGameOver) {
             pipe.classList.add('pipe');
@@ -89,33 +90,56 @@ document.addEventListener('DOMContentLoaded', () => {
             topPipe.classList.add('top-pipe');
             bottomPipe.src = 'img/bottompipe.png';
             bottomPipe.classList.add('bottom-pipe');
-            star.src = 'img/star.png';
-            star.classList.add('star');
 
             pipe.appendChild(topPipe);
             pipe.appendChild(bottomPipe);
             gameDisplay.appendChild(pipe);
-            gameDisplay.appendChild(star);
 
             let pipeLeft = 360;
-            let randomHeight = Math.random() * 60;
+            let randomHeight = Math.random() * 100; 
             let pipeBottom = randomHeight;
 
             pipe.style.left = pipeLeft + 'px';
             pipe.style.bottom = pipeBottom + 'px';
+            topPipe.style.bottom = pipeBottom + gap + 'px';
+
+            if (Math.random() < 0.3) {
+                const star = document.createElement('img');
+                star.src = 'img/star.png';
+                star.classList.add('star');
+                star.style.left = pipeLeft + 20 + 'px';
+                star.style.bottom = pipeBottom + gap / 2 + 'px';
+                gameDisplay.appendChild(star);
+
+                stars.push(star);
+
+                function moveStar() {
+                    star.style.left = pipeLeft + 20 + 'px';
+                    if (
+                        pipeLeft === 220 && birdBottom > pipeBottom + gap / 2 - 15 && birdBottom < pipeBottom + gap / 2 + 15
+                    ) {
+                        score += starPoints;
+                        starPoints += 10;
+                        starScore++;
+                        gameDisplay.removeChild(star);
+                        stars = stars.filter(s => s !== star); 
+                    }
+                }
+                setInterval(moveStar, 20);
+            }
+
+            pipes.push(pipe); 
 
             function movePipes() {
                 pipeLeft -= 2;
                 pipe.style.left = pipeLeft + 'px';
-                star.style.left = pipeLeft + 20 + 'px';
-                star.style.bottom = pipeBottom + gap / 2 + 'px';
 
                 if (pipeLeft === -60) {
                     clearInterval(timerId);
                     gameDisplay.removeChild(pipe);
-                    gameDisplay.removeChild(star);
                     passedPipes++;
                     updateScore();
+                    pipes = pipes.filter(p => p !== pipe); 
                 }
 
                 if (
@@ -125,12 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ) {
                     gameOver();
                     clearInterval(timerId);
-                }
-
-                if (pipeLeft === 220 && birdBottom > pipeBottom + gap / 2 - 15 && birdBottom < pipeBottom + gap / 2 + 15) {
-                    score += starPoints;
-                    starPoints += 10;
-                    starScore++;
                 }
             }
 
@@ -158,6 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         menu.style.display = 'block';
         updateRecorde();
+
+        pipes.forEach(pipe => gameDisplay.removeChild(pipe));
+        pipes = [];
+
+        stars.forEach(star => gameDisplay.removeChild(star));
+        stars = [];
     }
 
     updateRecorde();

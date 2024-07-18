@@ -5,7 +5,7 @@
     src: url('/font/Gamer.ttf') format('truetype');
 }
 
-/* Tilte */
+/* Title */
 .bona-nova-sc-regular {
     color: brown;
     font-family: "Bona Nova SC", serif;
@@ -59,12 +59,17 @@
     margin: 4px 8px 4px 8px;
 }
 /* Game */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
 .game {
     background-image: url('/img/flappybirdbg.png');
     position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
+    top: 0;
     left: 50%;
+    transform: translateX(-50%);
     width: 360px;
     height: 640px;
     overflow: hidden;
@@ -83,6 +88,7 @@
     height: 150px;
     width: 40px;
     position: absolute;
+    transform: rotate(180deg);
 }
 .bottom-pipe {
     height: 150px;
@@ -92,24 +98,15 @@
 .star {
     width: 20px;
     height: 20px;
-    background-color: gold;
     border-radius: 50%;
     position: absolute;
 }
 .score {
     position: absolute;
-    top: 20px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    font-family: 'Gamer';
     font-size: 24px;
+    font-family: 'Gamer';
     color: white;
-    text-shadow: 2px 2px 4px black;
-    z-index: 10;
-}
-
-@keyframes flappyBird {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(-20deg); }
-    100% { transform: rotate(0deg); }
 }
