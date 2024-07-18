@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetButton = document.querySelector('#reset');
     const menu = document.querySelector('#menu');
     const recordeDisplay = document.querySelector('#recorde');
+    const scoreDisplay = document.createElement('div');
+    scoreDisplay.classList.add('score');
+    gameDisplay.appendChild(scoreDisplay);
 
     let birdLeft = 50;
     let birdBottom = 100;
@@ -30,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starPoints = 10;
         passedPipes = 0;
         menu.style.display = 'none';
+        scoreDisplay.style.display = 'block';
         clearInterval(gameLoop);
         gameLoop = setInterval(game, 20);
         generatePipes();
@@ -45,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         recordeDisplay.textContent = `Recorde: ${recorde}`;
     }
 
+    function updateScoreDisplay() {
+        scoreDisplay.textContent = `Pontuação: ${score}`;
+    }
+
     function game() {
         birdBottom -= gravity;
         bird.style.bottom = birdBottom + 'px';
@@ -53,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (birdBottom < 0) {
             gameOver();
         }
+
+        updateScoreDisplay();
     }
 
     function jump() {
@@ -78,8 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
             topPipe.src = 'img/toppipe.png';
             topPipe.classList.add('top-pipe');
             bottomPipe.src = 'img/bottompipe.png';
-            bottomPipe.src = 'img/star.png';
             bottomPipe.classList.add('bottom-pipe');
+            star.src = 'img/star.png';
+            star.classList.add('star');
 
             pipe.appendChild(topPipe);
             pipe.appendChild(bottomPipe);
@@ -108,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (
-                    pipeLeft > 200 && pipeLeft < 280 && birdLeft === 220 &&
-                    (birdBottom < pipeBottom + 150 || birdBottom > pipeBottom + gap - 200) ||
+                    (pipeLeft > 200 && pipeLeft < 280 && birdLeft === 220 &&
+                        (birdBottom < pipeBottom + 150 || birdBottom > pipeBottom + gap - 200)) ||
                     birdBottom === 0
                 ) {
                     gameOver();
@@ -140,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(gameLoop);
         isGameOver = true;
         bird.style.display = 'none';
+        scoreDisplay.style.display = 'none';
         const recorde = localStorage.getItem('recorde') || 0;
         if (score > recorde) {
             localStorage.setItem('recorde', score);
