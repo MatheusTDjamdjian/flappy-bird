@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         stars.forEach(star => {
             const starRect = star.getBoundingClientRect();
-
             if (
                 birdRect.left < starRect.right &&
                 birdRect.right > starRect.left &&
@@ -174,23 +173,28 @@ document.addEventListener('DOMContentLoaded', () => {
             gameDisplay.appendChild(pipe);
 
             let pipeLeft = 360;
-            let randomHeight = randomIntFromInterval(100, 180); 
-            let randomHeightTop = randomIntFromInterval(100, 180); 
-            let pipeBottom = randomHeight;
-            let pipeTop = randomHeightTop;
+            let pipeBottom = randomIntFromInterval(100, 180); 
+            let pipeTop = randomIntFromInterval(100, 180); 
 
             pipe.style.left = pipeLeft + 'px';
             topPipe.style.top = (pipeTop * -1) + 'px';
-            bottomPipe.style.bottom = (pipeBottom * - 1) + 'px';
+            bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
 
             if (Math.random() < 0.3) {
                 const star = document.createElement('img');
                 star.src = 'img/star.png';
                 star.classList.add('star');
-                star.style.left = pipeLeft + 20 + 'px';
-                star.style.bottom = pipeBottom + gap / 2 + 'px';
-                gameDisplay.appendChild(star);
 
+                const starLeft = pipeLeft + 20;
+                const starBottom = pipeBottom + (gap / 2);
+                const starTop = pipeBottom + (gap / 2) + 20;
+
+                star.style.left = starLeft + 'px';
+                star.style.bottom = starBottom + 'px';
+
+                if (starBottom < pipeTop && starTop > pipeBottom) {
+                    gameDisplay.appendChild(star);
+                stars.push(star);
                 stars.push(star);
 
                 function moveStar() {
@@ -203,7 +207,25 @@ document.addEventListener('DOMContentLoaded', () => {
                         starScore++;
                         if (gameDisplay.contains(star)) {
                             gameDisplay.removeChild(star);
+                    stars.push(star);
+
+                function moveStar() {
+                    star.style.left = pipeLeft + 20 + 'px';
+                    if (
+                        pipeLeft === 220 && birdBottom > pipeBottom + gap / 2 - 15 && birdBottom < pipeBottom + gap / 2 + 15
+                    ) {
+                        score += starPoints;
+                        starPoints += 10;
+                        starScore++;
+                        if (gameDisplay.contains(star)) {
+                            gameDisplay.removeChild(star);
                         }
+                        }
+                        stars = stars.filter(s => s !== star); 
+                    }
+                }
+                setInterval(moveStar, 20);
+                }
                         stars = stars.filter(s => s !== star); 
                     }
                 }
