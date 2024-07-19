@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gap = 250;
     let score = 0;
     let starScore = 0;
-    let starPoints = 10;
+    let consecutiveStars = 0;
     let passedPipes = 0;
     let gameLoop;
     let pipes = [];
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isGameOver = false;
       score = 0;
       starScore = 0;
-      starPoints = 10;
+      consecutiveStars = 0;
       passedPipes = 0;
       pipeSpeed = 20;
       menu.style.display = 'none';
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
   
+      let starCollected = false;
       stars.forEach(star => {
         const starRect = star.getBoundingClientRect();
         if (
@@ -113,8 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
           birdRect.top < starRect.bottom &&
           birdRect.bottom > starRect.top
         ) {
-          score += starPoints;
-          starPoints += 10;
+          starCollected = true;
+          consecutiveStars++;
+          score += consecutiveStars * 10;
           starScore++;
           if (gameDisplay.contains(star)) {
             gameDisplay.removeChild(star);
@@ -122,6 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
           stars = stars.filter(s => s !== star);
         }
       });
+  
+      if (!starCollected && stars.length > 0) {
+        consecutiveStars = 0;
+      }
     }
   
     function jump() {
@@ -180,14 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
         topPipe.style.top = (pipeTop * -1) + 'px';
         bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
   
-        if (Math.random() < 0.3) {
+        if (Math.random() < 1) {
           const star = document.createElement('img');
           star.src = 'img/star.png';
           star.classList.add('star');
   
           const starLeft = pipeLeft + 20;
           const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
-  
           star.style.left = starLeft + 'px';
           star.style.bottom = starBottom + 'px';
   
@@ -201,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameDisplay.removeChild(star);
               }
               stars = stars.filter(s => s !== star);
+              consecutiveStars = 0;
             }
           }
           setInterval(moveStar, 20);
@@ -263,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       stars = [];
   
-      starPoints = 10;
+      consecutiveStars = 0;
     }
   
     updateRecorde();
