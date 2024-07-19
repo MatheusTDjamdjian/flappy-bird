@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         score++;
         if (score % 10 === 0) {
             pipeSpeed = pipeSpeed * 0.9;
-            gravity *= 1.1;
+            gravity *= 1.05;
         }
         updateRecorde();
     }
