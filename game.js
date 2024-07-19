@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameLoop;
     let pipes = [];
     let stars = [];
+    let pipeSpeed = 20;
 
     let gravity = 0.5;
     const initialJumpVelocity = 7;
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starScore = 0;
         starPoints = 10;
         passedPipes = 0;
+        pipeSpeed = 20;
         menu.style.display = 'none';
         scoreDisplay.style.display = 'block';
         clearInterval(gameLoop);
@@ -210,14 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            let timerId = setInterval(movePipes, 20);
+            let timerId = setInterval(movePipes, pipeSpeed);
             if (!isGameOver) setTimeout(generatePipes, 3000);
         }
     }
 
     function updateScore() {
         score++;
-        if (score % 15 === 0) {
+        if (score % 10 === 0) {
+            pipeSpeed = pipeSpeed * 0.9;
             gravity *= 1.1;
         }
         updateRecorde();
