@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startGame() {
         bird.style.display = 'block';
-        birdBottom = 100;
+        birdBottom = 300;
         birdLeft = 50;
         isGameOver = false;
         score = 0;
