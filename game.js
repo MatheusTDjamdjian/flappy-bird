@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function jump() {
+        if (isGameOver) return;
         birdBottom += jumpVelocity;
         jumpVelocity -= gravity;
 
@@ -126,7 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(() => {
         jump();
-        console.log(birdBottom);
+        if (!isGameOver) {
+            console.log(birdBottom);
+        }
     }, 20);
 
     document.addEventListener('keyup', control);
