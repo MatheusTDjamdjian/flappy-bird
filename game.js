@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
           star.classList.add('star');
   
           const starLeft = pipeLeft + 20;
-          const starBottom = pipeBottom + (gap / 2);
+          const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
   
           star.style.left = starLeft + 'px';
           star.style.bottom = starBottom + 'px';
