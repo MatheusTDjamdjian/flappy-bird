@@ -104,6 +104,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameOver();
             }
         });
+
+        stars.forEach(star => {
+            const starRect = star.getBoundingClientRect();
+
+            if (
+                birdRect.left < starRect.right &&
+                birdRect.right > starRect.left &&
+                birdRect.top < starRect.bottom &&
+                birdRect.bottom > starRect.top
+            ) {
+                score += starPoints;
+                starPoints += 10;
+                starScore++;
+                if (gameDisplay.contains(star)) {
+                    gameDisplay.removeChild(star);
+                }
+                stars = stars.filter(s => s !== star); 
+            }
+        });
     }
 
     function jump() {
@@ -134,8 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 20);
 
-    document.addEventListener('keyup', control);
-
     function randomIntFromInterval(min, max) { 
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -165,8 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pipe.style.left = pipeLeft + 'px';
             topPipe.style.top = (pipeTop * -1) + 'px';
             bottomPipe.style.bottom = (pipeBottom * - 1) + 'px';
-
-            console.log(pipeBottom);
 
             if (Math.random() < 0.3) {
                 const star = document.createElement('img');
@@ -251,6 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         stars = [];
+
+        starPoints = 10;
     }
 
     updateRecorde();
