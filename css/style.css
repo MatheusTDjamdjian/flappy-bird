@@ -17,6 +17,14 @@
 .bd {
     margin-top: -15px;
 }
+.record-style {
+    font-size: 24px;
+    color: rgb(226, 192, 0);
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+}
 /* Controls */
 .play {
     background: transparent;

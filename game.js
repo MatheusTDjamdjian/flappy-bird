@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameLoop;
     let pipes = [];
     let stars = [];
-    
-    const gravity = 0.5;
+
+    let gravity = 0.5;
     const initialJumpVelocity = 7;
 
     playButton.addEventListener('click', startGame);
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateRecorde() {
         const recorde = localStorage.getItem('recorde') || 0;
         recordeDisplay.textContent = `Recorde: ${recorde}`;
+        recordeDisplay.classList.add('record-style');
     }
 
     function updateScoreDisplay() {
@@ -68,45 +69,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateScoreDisplay();
+        checkCollision();
     }
-    
+
+    function checkCollision() {
+        const birdRect = bird.getBoundingClientRect();
+
+        pipes.forEach(pipe => {
+            const pipeRect = pipe.getBoundingClientRect();
+            const topPipe = pipe.querySelector('.top-pipe');
+            const bottomPipe = pipe.querySelector('.bottom-pipe');
+            const topPipeRect = topPipe.getBoundingClientRect();
+            const bottomPipeRect = bottomPipe.getBoundingClientRect();
+
+            if (
+                birdRect.left < topPipeRect.right &&
+                birdRect.right > topPipeRect.left &&
+                birdRect.top < topPipeRect.bottom &&
+                birdRect.bottom > topPipeRect.top
+            ) {
+                console.log("Colisão");
+                gameOver();
+            }
+
+            if (
+                birdRect.left < bottomPipeRect.right &&
+                birdRect.right > bottomPipeRect.left &&
+                birdRect.top < bottomPipeRect.bottom &&
+                birdRect.bottom > bottomPipeRect.top
+            ) {
+                console.log("Colisão");
+                gameOver();
+            }
+        });
+    }
+
     function jump() {
         birdBottom += jumpVelocity;
         jumpVelocity -= gravity;
-    
+
         if (birdBottom < 0) {
             birdBottom = 0;
             jumpVelocity = 0;
         }
-    
-        if (birdBottom > jumpHeight) {
-            birdBottom = jumpHeight;
-            jumpVelocity = 0;
-        }
     }
-    
+
     function startJump() {
         jumpVelocity = initialJumpVelocity;
     }
-    
+
     document.addEventListener('keyup', (e) => {
         if (e.keyCode === 32) {
             startJump();
         }
     });
-    
+
     setInterval(() => {
         jump();
         console.log(birdBottom);
     }, 20);
 
     document.addEventListener('keyup', control);
-
-    function control(e) {
-        if (e.keyCode === 32) {
-            jump();
-        }
-    }
 
     function randomIntFromInterval(min, max) { 
         return Math.floor(Math.random() * (max - min + 1) + min);
@@ -158,7 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         score += starPoints;
                         starPoints += 10;
                         starScore++;
-                        gameDisplay.removeChild(star);
+                        if (gameDisplay.contains(star)) {
+                            gameDisplay.removeChild(star);
+                        }
                         stars = stars.filter(s => s !== star); 
                     }
                 }
@@ -173,7 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (pipeLeft === -60) {
                     clearInterval(timerId);
-                    gameDisplay.removeChild(pipe);
+                    if (gameDisplay.contains(pipe)) {
+                        gameDisplay.removeChild(pipe);
+                    }
                     passedPipes++;
                     updateScore();
                     pipes = pipes.filter(p => p !== pipe); 
@@ -205,10 +232,18 @@ document.addEventListener('DOMContentLoaded', () => {
         menu.style.display = 'block';
         updateRecorde();
 
-        pipes.forEach(pipe => gameDisplay.removeChild(pipe));
+        pipes.forEach(pipe => {
+            if (gameDisplay.contains(pipe)) {
+                gameDisplay.removeChild(pipe);
+            }
+        });
         pipes = [];
 
-        stars.forEach(star => gameDisplay.removeChild(star));
+        stars.forEach(star => {
+            if (gameDisplay.contains(star)) {
+                gameDisplay.removeChild(star);
+            }
+        });
         stars = [];
     }
 
