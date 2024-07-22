@@ -31,241 +31,242 @@ document.addEventListener('DOMContentLoaded', () => {
   resetButton.addEventListener('click', resetRecorde);
 
   function startGame() {
-      bird.style.display = 'block';
-      birdBottom = 300;
-      birdLeft = 50;
-      isGameOver = false;
-      score = 0;
-      starScore = 0;
-      starValue = 10;
-      consecutiveStars = 0;
-      passedPipes = 0;
-      pipeSpeed = 20;
-      menu.style.display = 'none';
-      scoreDisplay.style.display = 'block';
-      clearInterval(gameLoop);
-      gameLoop = setInterval(game, 8);
-      generatePipes();
+    bird.style.display = 'block';
+    birdBottom = 300;
+    birdLeft = 50;
+    isGameOver = false;
+    score = 0;
+    starScore = 0;
+    starValue = 10;
+    consecutiveStars = 0;
+    passedPipes = 0;
+    pipeSpeed = 20;
+    menu.style.display = 'none';
+    scoreDisplay.style.display = 'block';
+    clearInterval(gameLoop);
+    gameLoop = setInterval(game, 8);
+    generatePipes();
   }
 
   function resetRecorde() {
-      localStorage.setItem('recorde', 0);
-      updateRecorde();
+    localStorage.setItem('recorde', 0);
+    updateRecorde();
   }
 
   function updateRecorde() {
-      const recorde = localStorage.getItem('recorde') || 0;
-      recordeDisplay.textContent = `Recorde: ${recorde}`;
-      recordeDisplay.classList.add('record-style');
+    const recorde = localStorage.getItem('recorde') || 0;
+    recordeDisplay.textContent = `Recorde: ${recorde}`;
+    recordeDisplay.classList.add('record-style');
   }
 
   function updateScoreDisplay() {
-      scoreDisplay.textContent = `Pontuação: ${score}`;
+    scoreDisplay.textContent = `Pontuação: ${score}`;
   }
 
   function game() {
-      birdBottom -= gravity;
-      bird.style.bottom = birdBottom + 'px';
-      bird.style.left = birdLeft + 'px';
+    birdBottom -= gravity;
+    bird.style.bottom = birdBottom + 'px';
+    bird.style.left = birdLeft + 'px';
 
-      if (birdBottom < 0) {
-          gameOver();
-      }
+    if (birdBottom < 0) {
+      gameOver();
+    }
 
-      updateScoreDisplay();
-      checkCollision();
+    updateScoreDisplay();
+    checkCollision();
   }
 
   function checkCollision() {
-      const birdRect = bird.getBoundingClientRect();
+    const birdRect = bird.getBoundingClientRect();
 
-      pipes.forEach(pipe => {
-          const pipeRect = pipe.getBoundingClientRect();
-          const topPipe = pipe.querySelector('.top-pipe');
-          const bottomPipe = pipe.querySelector('.bottom-pipe');
-          const topPipeRect = topPipe.getBoundingClientRect();
-          const bottomPipeRect = bottomPipe.getBoundingClientRect();
+    pipes.forEach(pipe => {
+      const pipeRect = pipe.getBoundingClientRect();
+      const topPipe = pipe.querySelector('.top-pipe');
+      const bottomPipe = pipe.querySelector('.bottom-pipe');
+      const topPipeRect = topPipe.getBoundingClientRect();
+      const bottomPipeRect = bottomPipe.getBoundingClientRect();
 
-          if (
-              birdRect.left < topPipeRect.right &&
-              birdRect.right > topPipeRect.left &&
-              birdRect.top < topPipeRect.bottom &&
-              birdRect.bottom > topPipeRect.top
-          ) {
-              console.log("Colisão");
-              gameOver();
-          }
-
-          if (
-              birdRect.left < bottomPipeRect.right &&
-              birdRect.right > bottomPipeRect.left &&
-              birdRect.top < bottomPipeRect.bottom &&
-              birdRect.bottom > bottomPipeRect.top
-          ) {
-              console.log("Colisão");
-              gameOver();
-          }
-      });
-
-      let starCollected = false;
-      stars.forEach(star => {
-          const starRect = star.getBoundingClientRect();
-          if (
-              birdRect.left < starRect.right &&
-              birdRect.right > starRect.left &&
-              birdRect.top < starRect.bottom &&
-              birdRect.bottom > starRect.top
-          ) {
-              starCollected = true;
-              consecutiveStars++;
-              score += starValue; 
-              starValue += 10; 
-              starScore++;
-              if (gameDisplay.contains(star)) {
-                  gameDisplay.removeChild(star);
-              }
-              stars = stars.filter(s => s !== star);
-          }
-      });
-
-      if (!starCollected && stars.length > 0) {
-          consecutiveStars = 0;
+      if (
+        birdRect.left < topPipeRect.right &&
+        birdRect.right > topPipeRect.left &&
+        birdRect.top < topPipeRect.bottom &&
+        birdRect.bottom > topPipeRect.top
+      ) {
+        console.log("Colisão");
+        gameOver();
       }
+
+      if (
+        birdRect.left < bottomPipeRect.right &&
+        birdRect.right > bottomPipeRect.left &&
+        birdRect.top < bottomPipeRect.bottom &&
+        birdRect.bottom > bottomPipeRect.top
+      ) {
+        console.log("Colisão");
+        gameOver();
+      }
+    });
+
+    let starCollected = false;
+    stars.forEach(star => {
+      const starRect = star.getBoundingClientRect();
+      if (
+        birdRect.left < starRect.right &&
+        birdRect.right > starRect.left &&
+        birdRect.top < starRect.bottom &&
+        birdRect.bottom > starRect.top
+      ) {
+        starCollected = true;
+        consecutiveStars++;
+        score += starValue;
+        starValue += 10;
+        starScore++;
+        if (gameDisplay.contains(star)) {
+          gameDisplay.removeChild(star);
+        }
+        stars = stars.filter(s => s !== star);
+      }
+    });
+
+    if (!starCollected && stars.length > 0) {
+      consecutiveStars = 0;
+    }
   }
 
   function jump() {
-      if (isGameOver) return;
-      birdBottom += jumpVelocity;
-      jumpVelocity -= gravity;
+    if (isGameOver) return;
+    birdBottom += jumpVelocity;
+    jumpVelocity -= gravity;
 
-      if (birdBottom < 0) {
-          birdBottom = 0;
-          jumpVelocity = 0;
-      }
+    if (birdBottom < 0) {
+      birdBottom = 0;
+      jumpVelocity = 0;
+    }
   }
 
   function startJump() {
-      jumpVelocity = initialJumpVelocity;
+    jumpVelocity = initialJumpVelocity;
   }
 
   document.addEventListener('keyup', (e) => {
-      if (e.keyCode === 32) {
-          startJump();
-      }
+    if (e.keyCode === 32) {
+      startJump();
+    }
   });
 
   setInterval(() => {
-      jump();
-      if (!isGameOver) {
-        console.log(`${birdBottom}`);
-      }
+    jump();
+    if (!isGameOver) {
+      console.log(`${birdBottom}`);
+    }
   }, 20);
 
   function randomIntFromInterval(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   function generatePipes() {
-      const pipe = document.createElement('div');
-      const topPipe = document.createElement('img');
-      const bottomPipe = document.createElement('img');
+    const pipe = document.createElement('div');
+    const topPipe = document.createElement('img');
+    const bottomPipe = document.createElement('img');
 
-      if (!isGameOver) {
-          pipe.classList.add('pipe');
-          topPipe.src = 'img/toppipe.png';
-          topPipe.classList.add('top-pipe');
-          bottomPipe.src = 'img/bottompipe.png';
-          bottomPipe.classList.add('bottom-pipe');
+    if (!isGameOver) {
+      pipe.classList.add('pipe');
+      topPipe.src = 'img/toppipe.png';
+      topPipe.classList.add('top-pipe');
+      bottomPipe.src = 'img/bottompipe.png';
+      bottomPipe.classList.add('bottom-pipe');
 
-          pipe.appendChild(topPipe);
-          pipe.appendChild(bottomPipe);
-          gameDisplay.appendChild(pipe);
+      pipe.appendChild(topPipe);
+      pipe.appendChild(bottomPipe);
+      gameDisplay.appendChild(pipe);
 
-          let pipeLeft = 360;
-          let pipeBottom = randomIntFromInterval(100, 180); 
-          let pipeTop = randomIntFromInterval(100, 180); 
+      let pipeLeft = 360;
+      let pipeBottom = randomIntFromInterval(100, 180);
+      let pipeTop = randomIntFromInterval(100, 180);
 
-          pipe.style.left = pipeLeft + 'px';
-          topPipe.style.top = (pipeTop * -1) + 'px';
-          bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
+      pipe.style.left = pipeLeft + 'px';
+      topPipe.style.top = (pipeTop * -1) + 'px';
+      bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
 
-          if (Math.random() < 0.25) {
-              const star = document.createElement('img');
-              star.src = 'img/star.png';
-              star.classList.add('star');
+      if (Math.random() < 0.25) {
+        const star = document.createElement('img');
+        star.src = 'img/star.png';
+        star.classList.add('star');
 
-              const starLeft = pipeLeft + 20;
-              const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
-              star.style.left = starLeft + 'px';
-              star.style.bottom = starBottom + 'px';
+        const starLeft = pipeLeft + 20;
+        const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
+        star.style.left = starLeft + 'px';
+        star.style.bottom = starBottom + 'px';
 
-              gameDisplay.appendChild(star);
-              stars.push(star);
+        gameDisplay.appendChild(star);
+        stars.push(star);
 
-              function moveStar() {
-                  star.style.left = (parseInt(star.style.left) - 2) + 'px';
-                  if (parseInt(star.style.left) < -20) {
-                      if (gameDisplay.contains(star)) {
-                          gameDisplay.removeChild(star);
-                      }
-                      stars = stars.filter(s => s !== star);
-                      consecutiveStars = 0;
-                  }
-              }
-              setInterval(moveStar, 20);
+        function moveStar() {
+          star.style.left = (parseInt(star.style.left) - 2) + 'px';
+          if (parseInt(star.style.left) < -20) {
+            if (gameDisplay.contains(star)) {
+              gameDisplay.removeChild(star);
+            }
+            stars = stars.filter(s => s !== star);
+            consecutiveStars = 0;
           }
-
-          pipes.push(pipe);
-
-          function movePipes() {
-              pipeLeft -= 2;
-              pipe.style.left = pipeLeft + 'px';
-
-              if (pipeLeft === -60) {
-                  clearInterval(timerId);
-                  if (gameDisplay.contains(pipe)) {
-                      gameDisplay.removeChild(pipe);
-                  }
-                  passedPipes++;
-                  updateScore();
-                  pipes = pipes.filter(p => p !== pipe);
-              }
-          }
-
-          let timerId = setInterval(movePipes, pipeSpeed);
-          if (!isGameOver) setTimeout(generatePipes, 3000);
+        }
+        setInterval(moveStar, 20);
       }
+
+      pipes.push(pipe);
+
+      function movePipes() {
+        pipeLeft -= 2;
+        pipe.style.left = pipeLeft + 'px';
+
+        if (pipeLeft === -60) {
+          clearInterval(timerId);
+          if (gameDisplay.contains(pipe)) {
+            gameDisplay.removeChild(pipe);
+          }
+          passedPipes++;
+          updateScore();
+          pipes = pipes.filter(p => p !== pipe);
+        }
+      }
+
+      let timerId = setInterval(movePipes, pipeSpeed);
+      if (!isGameOver) setTimeout(generatePipes, 3000);
+    }
   }
 
   function updateScore() {
-      score++;
-      if (score % 10 === 0) {
-          pipeSpeed = pipeSpeed * 0.9;
-          gravity *= 1.05;
-      }
-      updateRecorde();
+    score++;
+    if (score % 10 === 0) {
+      pipeSpeed = pipeSpeed * 0.9;
+      gravity *= 1.05;
+    }
+    updateRecorde();
   }
 
   function gameOver() {
-      clearInterval(gameLoop);
-      isGameOver = true;
-      bird.style.display = 'none';
-      scoreDisplay.style.display = 'none';
-      const recorde = localStorage.getItem('recorde') || 0;
-      if (score > recorde) {
-          localStorage.setItem('recorde', score);
+    clearInterval(gameLoop);
+    isGameOver = true;
+    bird.style.display = 'none';
+    scoreDisplay.style.display = 'none';
+    const recorde = localStorage.getItem('recorde') || 0;
+    if (score > recorde) {
+      localStorage.setItem('recorde', score);
+    }
+    menu.style.display = 'block';
+    updateRecorde();
+
+    pipes.forEach(pipe => {
+      if (gameDisplay.contains(pipe)) {
+        gameDisplay.removeChild(pipe);
       }
-      menu.style.display = 'block';
-      updateRecorde();
+    });
+    pipes = [];
 
-      pipes.forEach(pipe => {
-          if (gameDisplay.contains(pipe)) {
-              gameDisplay.removeChild(pipe);
-          }
-      });
-      pipes = [];
+    stars.forEach(star => {
 
-      stars.forEach(star => {
           if (gameDisplay.contains(star)) {
               gameDisplay.removeChild(star);
           }
