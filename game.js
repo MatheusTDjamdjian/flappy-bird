@@ -274,6 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       consecutiveStars = 0;
   }
-
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      gameOver();
+    }
+  });
   updateRecorde();
 });
