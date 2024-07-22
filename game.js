@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bird.style.left = birdLeft + 'px';
 
     if (birdBottom < 0) {
-      birdBottom = 0;
+      gameOver()
     }
 
     updateScoreDisplay();
