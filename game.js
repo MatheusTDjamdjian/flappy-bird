@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
           topPipe.style.top = (pipeTop * -1) + 'px';
           bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
 
-          if (Math.random() < 0.3) {
+          if (Math.random() < 0.25) {
               const star = document.createElement('img');
               star.src = 'img/star.png';
               star.classList.add('star');
