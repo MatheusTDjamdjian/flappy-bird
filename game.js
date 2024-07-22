@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(() => {
       jump();
       if (!isGameOver) {
-          console.log(birdBottom);
+        console.log(`${birdBottom}`);
       }
   }, 20);
 
