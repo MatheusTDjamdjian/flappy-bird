@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bird.style.left = birdLeft + 'px';
 
     if (birdBottom < 0) {
-      gameOver();
+      birdBottom = 0;
     }
 
     updateScoreDisplay();
@@ -104,6 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ) {
         console.log("Colisão");
         gameOver();
+      }
+
+      const pipeLeft = parseInt(pipe.style.left);
+      if (pipeLeft < birdLeft && !pipe.passed) {
+        score++;
+        passedPipes++;
+        pipe.passed = true;
+        updateScore();
       }
     });
 
@@ -166,79 +174,78 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generatePipes() {
+    if (isGameOver) return;
+
     const pipe = document.createElement('div');
     const topPipe = document.createElement('img');
     const bottomPipe = document.createElement('img');
 
-    if (!isGameOver) {
-      pipe.classList.add('pipe');
-      topPipe.src = 'img/toppipe.png';
-      topPipe.classList.add('top-pipe');
-      bottomPipe.src = 'img/bottompipe.png';
-      bottomPipe.classList.add('bottom-pipe');
+    pipe.classList.add('pipe');
+    topPipe.src = 'img/toppipe.png';
+    topPipe.classList.add('top-pipe');
+    bottomPipe.src = 'img/bottompipe.png';
+    bottomPipe.classList.add('bottom-pipe');
 
-      pipe.appendChild(topPipe);
-      pipe.appendChild(bottomPipe);
-      gameDisplay.appendChild(pipe);
+    pipe.appendChild(topPipe);
+    pipe.appendChild(bottomPipe);
+    gameDisplay.appendChild(pipe);
 
-      let pipeLeft = 360;
-      let pipeBottom = randomIntFromInterval(100, 180);
-      let pipeTop = randomIntFromInterval(100, 180);
+    let pipeLeft = 360;
+    let pipeBottom = randomIntFromInterval(100, 180);
+    let pipeTop = randomIntFromInterval(100, 180);
 
-      pipe.style.left = pipeLeft + 'px';
-      topPipe.style.top = (pipeTop * -1) + 'px';
-      bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
+    pipe.style.left = pipeLeft + 'px';
+    topPipe.style.top = (pipeTop * -1) + 'px';
+    bottomPipe.style.bottom = (pipeBottom * -1) + 'px';
 
-      if (Math.random() < 0.25) {
-        const star = document.createElement('img');
-        star.src = 'img/star.png';
-        star.classList.add('star');
+    pipe.passed = false;
 
-        const starLeft = pipeLeft + 20;
-        const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
-        star.style.left = starLeft + 'px';
-        star.style.bottom = starBottom + 'px';
+    if (Math.random() < 0.25) {
+      const star = document.createElement('img');
+      star.src = 'img/star.png';
+      star.classList.add('star');
 
-        gameDisplay.appendChild(star);
-        stars.push(star);
+      const starLeft = pipeLeft + 20;
+      const starBottom = pipeBottom + randomIntFromInterval(30, gap - 30);
+      star.style.left = starLeft + 'px';
+      star.style.bottom = starBottom + 'px';
 
-        function moveStar() {
-          star.style.left = (parseInt(star.style.left) - 2) + 'px';
-          if (parseInt(star.style.left) < -20) {
-            if (gameDisplay.contains(star)) {
-              gameDisplay.removeChild(star);
-            }
-            stars = stars.filter(s => s !== star);
-            consecutiveStars = 0;
+      gameDisplay.appendChild(star);
+      stars.push(star);
+
+      function moveStar() {
+        star.style.left = (parseInt(star.style.left) - 2) + 'px';
+        if (parseInt(star.style.left) < -20) {
+          if (gameDisplay.contains(star)) {
+            gameDisplay.removeChild(star);
           }
-        }
-        setInterval(moveStar, 20);
-      }
-
-      pipes.push(pipe);
-
-      function movePipes() {
-        pipeLeft -= 2;
-        pipe.style.left = pipeLeft + 'px';
-
-        if (pipeLeft === -60) {
-          clearInterval(timerId);
-          if (gameDisplay.contains(pipe)) {
-            gameDisplay.removeChild(pipe);
-          }
-          passedPipes++;
-          updateScore();
-          pipes = pipes.filter(p => p !== pipe);
+          stars = stars.filter(s => s !== star);
+          consecutiveStars = 0;
         }
       }
-
-      let timerId = setInterval(movePipes, pipeSpeed);
-      if (!isGameOver) setTimeout(generatePipes, 3000);
+      setInterval(moveStar, 20);
     }
+
+    pipes.push(pipe);
+
+    function movePipes() {
+      pipeLeft -= 2;
+      pipe.style.left = pipeLeft + 'px';
+
+      if (pipeLeft === -60) {
+        clearInterval(timerId);
+        if (gameDisplay.contains(pipe)) {
+          gameDisplay.removeChild(pipe);
+        }
+        pipes = pipes.filter(p => p !== pipe);
+      }
+    }
+
+    let timerId = setInterval(movePipes, pipeSpeed);
+    if (!isGameOver) setTimeout(generatePipes, 3000);
   }
 
   function updateScore() {
-    score++;
     if (score % 10 === 0) {
       pipeSpeed = pipeSpeed * 0.9;
       gravity *= 1.05;
@@ -266,19 +273,20 @@ document.addEventListener('DOMContentLoaded', () => {
     pipes = [];
 
     stars.forEach(star => {
+      if (gameDisplay.contains(star)) {
+        gameDisplay.removeChild(star);
+      }
+    });
+    stars = [];
 
-          if (gameDisplay.contains(star)) {
-              gameDisplay.removeChild(star);
-          }
-      });
-      stars = [];
-
-      consecutiveStars = 0;
+    consecutiveStars = 0;
   }
+
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       gameOver();
     }
   });
+
   updateRecorde();
 });
