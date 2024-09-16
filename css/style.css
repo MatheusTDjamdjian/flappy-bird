@@ -80,7 +80,7 @@ body {
 }
 
 .game {
-    background-image: url('/img/flappybirdbg.png');
+    background-image: url('/img/flappybirdbg.jpg');
     position: absolute;
     top: 3%;
     left: 50%;
