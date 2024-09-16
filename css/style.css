@@ -38,7 +38,7 @@
     position: absolute;
     transform: translate(-50%, -50%);
     text-shadow: #00000093 1px 2px 4px;
-    box-shadow: #2f9aa6 0px 0px 4px;
+    box-shadow:  #000000a9 0px 0px 4px;
     border: transparent;
     font-family: 'Gamer';
     color: brown;
@@ -52,7 +52,7 @@
     position: absolute;
     transform: translate(-50%, -50%);
     text-shadow: #00000093 1px 2px 4px;
-    box-shadow:  #2f9aa6 0px 0px 4px;
+    box-shadow:  #0000009d 0px 0px 4px;
     border: transparent;
     top: 50%;
     left: 50%;
