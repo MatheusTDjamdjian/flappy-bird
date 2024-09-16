@@ -40,7 +40,7 @@
     text-shadow: #00000093 1px 2px 4px;
     box-shadow:  #000000a9 0px 0px 4px;
     border: transparent;
-    font-family: 'Gamer';
+    font-family: 'Bona Nova SC';
     color: brown;
     font-size: 22px;
     top: 50%;
@@ -138,6 +138,6 @@ body {
     left: 50%;
     transform: translateX(-50%);
     font-size: 24px;
-    font-family: 'Gamer';
+    font-family: 'Bona Nova SC';
     color: white;
 }
