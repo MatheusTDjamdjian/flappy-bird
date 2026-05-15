@@ -12,20 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let birdLeft = 50;
   let birdBottom = 0;
   let jumpVelocity = 0;
-  let isGameOver = false;
-  let gap = 250;
+  let isGameOver = true;
+  let gap = 180;
   let score = 0;
   let starScore = 0;
   let starValue = 10;
   let consecutiveStars = 0;
   let passedPipes = 0;
   let gameLoop;
+  let pipeGenerateTimeout;
   let pipes = [];
   let stars = [];
   let pipeSpeed = 20;
 
   let gravity = 0.5;
   const initialJumpVelocity = 7;
+  const gameHeight = 640;
+  const pipeImgHeight = 392;
 
   playButton.addEventListener('click', startGame);
   resetButton.addEventListener('click', resetRecorde);
@@ -34,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     bird.style.display = 'block';
     birdBottom = 300;
     birdLeft = 50;
+    jumpVelocity = 0;
+    gravity = 0.5;
     isGameOver = false;
     score = 0;
     starScore = 0;
@@ -44,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menu.style.display = 'none';
     scoreDisplay.style.display = 'block';
     clearInterval(gameLoop);
+    clearTimeout(pipeGenerateTimeout);
     gameLoop = setInterval(game, 8);
     generatePipes();
   }
@@ -64,12 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function game() {
-    birdBottom -= gravity;
+    if (isGameOver) return;
     bird.style.bottom = birdBottom + 'px';
     bird.style.left = birdLeft + 'px';
 
     if (birdBottom < 0) {
-      gameOver()
+      gameOver();
+      return;
     }
 
     updateScoreDisplay();
@@ -80,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const birdRect = bird.getBoundingClientRect();
 
     pipes.forEach(pipe => {
-      const pipeRect = pipe.getBoundingClientRect();
       const topPipe = pipe.querySelector('.top-pipe');
       const bottomPipe = pipe.querySelector('.bottom-pipe');
       const topPipeRect = topPipe.getBoundingClientRect();
@@ -92,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         birdRect.top < topPipeRect.bottom &&
         birdRect.bottom > topPipeRect.top
       ) {
-        console.log("Colisão");
         gameOver();
       }
 
@@ -102,12 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
         birdRect.top < bottomPipeRect.bottom &&
         birdRect.bottom > bottomPipeRect.top
       ) {
-        console.log("Colisão");
         gameOver();
       }
 
       const pipeLeft = parseInt(pipe.style.left);
-      if (pipeLeft < birdLeft && !pipe.passed) {
+      if (pipeLeft + 40 < birdLeft && !pipe.passed) {
         score++;
         passedPipes++;
         pipe.passed = true;
@@ -115,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    let starCollected = false;
     stars.forEach(star => {
       const starRect = star.getBoundingClientRect();
       if (
@@ -124,50 +127,36 @@ document.addEventListener('DOMContentLoaded', () => {
         birdRect.top < starRect.bottom &&
         birdRect.bottom > starRect.top
       ) {
-        starCollected = true;
         consecutiveStars++;
         score += starValue;
         starValue += 10;
         starScore++;
+        clearInterval(star.timerId);
         if (gameDisplay.contains(star)) {
           gameDisplay.removeChild(star);
         }
         stars = stars.filter(s => s !== star);
       }
     });
-
-    if (!starCollected && stars.length > 0) {
-      consecutiveStars = 0;
-    }
   }
 
   function jump() {
     if (isGameOver) return;
     birdBottom += jumpVelocity;
     jumpVelocity -= gravity;
-
-    if (birdBottom < 0) {
-      birdBottom = 0;
-      jumpVelocity = 0;
-    }
   }
 
   function startJump() {
     jumpVelocity = initialJumpVelocity;
   }
 
-  document.addEventListener('keyup', (e) => {
-    if (e.keyCode === 32) {
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && !e.repeat) {
       startJump();
     }
   });
 
-  setInterval(() => {
-    jump();
-    if (!isGameOver) {
-      console.log(`${birdBottom}`);
-    }
-  }, 20);
+  setInterval(jump, 20);
 
   function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -191,8 +180,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gameDisplay.appendChild(pipe);
 
     let pipeLeft = 360;
-    let pipeBottom = randomIntFromInterval(100, 180);
-    let pipeTop = randomIntFromInterval(100, 180);
+    const gapTop = randomIntFromInterval(100, gameHeight - gap - 100);
+    let pipeTop = pipeImgHeight - gapTop;
+    let pipeBottom = gapTop + gap - (gameHeight - pipeImgHeight);
 
     pipe.style.left = pipeLeft + 'px';
     topPipe.style.top = (pipeTop * -1) + 'px';
@@ -205,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         star.src = 'img/star.png';
         star.classList.add('star');
 
-        const starBottom = (pipeTop + (gap / 2)) - 10;
+        const starBottom = gameHeight - gapTop - (gap / 2) - 10;
         star.style.left = pipeLeft + 'px';
         star.style.bottom = starBottom + 'px';
 
@@ -215,14 +205,17 @@ document.addEventListener('DOMContentLoaded', () => {
         function moveStar() {
             star.style.left = (parseInt(star.style.left) - 2) + 'px';
             if (parseInt(star.style.left) < -20) {
+                clearInterval(star.timerId);
                 if (gameDisplay.contains(star)) {
                     gameDisplay.removeChild(star);
                 }
                 stars = stars.filter(s => s !== star);
                 consecutiveStars = 0;
+                starValue = 10;
             }
         }
-        setInterval(moveStar, pipeSpeed);
+        star.moveStar = moveStar;
+        star.timerId = setInterval(moveStar, pipeSpeed);
     }
 
     pipes.push(pipe);
@@ -231,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pipeLeft -= 2;
         pipe.style.left = pipeLeft + 'px';
 
-        if (pipeLeft === -60) {
-            clearInterval(timerId);
+        if (pipeLeft <= -60) {
+            clearInterval(pipe.timerId);
             if (gameDisplay.contains(pipe)) {
                 gameDisplay.removeChild(pipe);
             }
@@ -240,8 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let timerId = setInterval(movePipes, pipeSpeed);
-    if (!isGameOver) setTimeout(generatePipes, 3000);
+    pipe.movePipes = movePipes;
+    pipe.timerId = setInterval(movePipes, pipeSpeed);
+    if (!isGameOver) pipeGenerateTimeout = setTimeout(generatePipes, 3000);
 }
 
 function updateScore() {
@@ -249,19 +243,24 @@ function updateScore() {
       pipeSpeed = pipeSpeed * 0.9;
       gravity *= 1.05;
 
+      pipes.forEach(pipe => {
+          clearInterval(pipe.timerId);
+          pipe.timerId = setInterval(pipe.movePipes, pipeSpeed);
+      });
+
       stars.forEach(star => {
           clearInterval(star.timerId);
-          star.timerId = setInterval(() => {
-              star.style.left = (parseInt(star.style.left) - 2) + 'px';
-          }, pipeSpeed);
+          star.timerId = setInterval(star.moveStar, pipeSpeed);
       });
   }
   updateRecorde();
 }
 
   function gameOver() {
-    clearInterval(gameLoop);
+    if (isGameOver) return;
     isGameOver = true;
+    clearInterval(gameLoop);
+    clearTimeout(pipeGenerateTimeout);
     bird.style.display = 'none';
     scoreDisplay.style.display = 'none';
     const recorde = localStorage.getItem('recorde') || 0;
@@ -272,6 +271,7 @@ function updateScore() {
     updateRecorde();
 
     pipes.forEach(pipe => {
+      clearInterval(pipe.timerId);
       if (gameDisplay.contains(pipe)) {
         gameDisplay.removeChild(pipe);
       }
@@ -279,6 +279,7 @@ function updateScore() {
     pipes = [];
 
     stars.forEach(star => {
+      clearInterval(star.timerId);
       if (gameDisplay.contains(star)) {
         gameDisplay.removeChild(star);
       }

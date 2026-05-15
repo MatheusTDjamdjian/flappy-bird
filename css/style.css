@@ -115,16 +115,6 @@ body {
     width: 49px;
     height: 392px;
 }
-
-.top-pipe {
-    height: 200px;
-    width: 40px;
-    position: absolute;
-}
-.bottom-pipe {
-    height: 150px;
-    width: 40px;
-}
 .star {
     width: 20px;
     height: 20px;
