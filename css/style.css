@@ -2,132 +2,274 @@
 
 @font-face {
     font-family: 'Gamer';
-    src: url('/font/Gamer.ttf') format('truetype');
+    src: url('../font/Gamer.ttf') format('truetype');
+    font-display: swap;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+:root {
+    --brown: #8b2e16;
+    --orange: #ff6a13;
+    --gold: #ffd23f;
+    --cream: #fff5d6;
+    --sky-dark: #1f6fa8;
+}
 
-/* Title */
-.silkscreen-regular {
-    font-family: "Silkscreen", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-.bona-nova-sc-regular {
-    color: brown;
-    font-family: "Bona Nova SC", serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 26px;
-    text-align: center;
+* {
+    box-sizing: border-box;
 }
-.bd {
-    margin-top: -15px;
-}
-.record-style {
-    font-size: 24px;
-    color: rgb(226, 192, 0);
-    font-weight: bold;
-    text-align: center;
-    padding: 10px;
-    border-radius: 10px;
-}
-/* Controls */
-.play {
-    background: transparent;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    text-shadow: #00000093 1px 2px 4px;
-    box-shadow:  #000000a9 0px 0px 4px;
-    border: transparent;
-    font-family: 'Bona Nova SC';
-    color: brown;
-    font-size: 22px;
-    top: 50%;
-    left: 50%;
-    width: 160px;
-}
-.reset {
-    background: transparent;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    text-shadow: #00000093 1px 2px 4px;
-    box-shadow:  #0000009d 0px 0px 4px;
-    border: transparent;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    margin-top: 100px;
-}
-.txt-reset {
-    font-family: 'Bona Nova SC';
-    color: #FF4E00;
-    font-weight: 1000;
-}
-.changa-controls {
-    font-family: "Changa", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 20px;
-    color: brown;
-    margin: 4px 8px 4px 8px;
-}
-/* Game */
+
+html,
 body {
     margin: 0;
-    padding: 0;
-    overflow: hidden;
+    height: 100%;
 }
 
-.container {
-    display: flex;
-    justify-content: center !important;
-    align-items: center !important;
+body {
+    overflow: hidden;
+    background: radial-gradient(circle at center, #2b8fd6 0%, var(--sky-dark) 100%);
+    font-family: 'Bona Nova SC', serif;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
-.back {
-    background-image: url('/img/bg-game.png');
-    background-repeat: no-repeat;
-    width: 26.5vw;
-    height: 97.2vh;
-}
+
+/* ------------------------------------------------------------------ */
+/* Área do jogo: 360x640 fixos, escalados por --scale para caber na tela */
+/* ------------------------------------------------------------------ */
 .game {
+    --scale: 1;
     position: absolute;
-    top: 3%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
     width: 360px;
     height: 640px;
     overflow: hidden;
+    transform: translate(-50%, -50%) scale(var(--scale));
+    background: url('../img/bg-game.png') center / cover no-repeat;
+    image-rendering: pixelated;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
+    touch-action: none;
+    cursor: pointer;
 }
+
+.world {
+    position: absolute;
+    inset: 0;
+}
+
+.bird,
+.pipe,
+.star {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+    pointer-events: none;
+}
+
 .bird {
     width: 34px;
     height: 24px;
-    position: absolute;
+    z-index: 5;
     display: none;
+    transform-origin: 50% 50%;
 }
+
 .pipe {
-    position: absolute;
+    width: 52px;
     height: 100%;
 }
+
 .pipe img {
     position: absolute;
-    width: 49px;
-    height: 392px;
+    left: 0;
+    width: 52px;
+    height: 416px;
 }
+
 .star {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    position: absolute;
+    width: 22px;
+    height: 22px;
+    image-rendering: auto;
+    animation: spin 2.4s linear infinite;
 }
+
+/* ------------------------------------------------------------------ */
+/* HUD                                                                 */
+/* ------------------------------------------------------------------ */
 .score {
     position: absolute;
-    z-index: 1000;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 24px;
-    font-family: 'Bona Nova SC';
-    color: white;
+    top: 28px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    text-align: center;
+    font-family: 'Gamer', monospace;
+    font-size: 72px;
+    line-height: 1;
+    color: #fff;
+    -webkit-text-stroke: 2px #000;
+    text-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+.hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 380px;
+    z-index: 10;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    animation: blink 1.2s ease-in-out infinite;
+}
+
+.popup {
+    position: absolute;
+    z-index: 8;
+    font-family: 'Gamer', monospace;
+    font-size: 32px;
+    color: var(--gold);
+    -webkit-text-stroke: 1px #000;
+    pointer-events: none;
+    animation: popup 0.8s ease-out forwards;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* Menu / overlays                                                     */
+/* ------------------------------------------------------------------ */
+.overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    cursor: default;
+}
+
+.panel {
+    width: 280px;
+    padding: 20px 16px 24px;
+    text-align: center;
+    background: var(--cream);
+    border: 4px solid var(--brown);
+    border-radius: 12px;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+    color: var(--brown);
+}
+
+.panel h2 {
+    margin: 0 0 8px;
+    font-size: 30px;
+}
+
+.small {
+    margin: 0;
+    font-size: 16px;
+}
+
+.title h1,
+.title h2 {
+    margin: 0;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--brown);
+    text-shadow: 2px 2px 0 var(--gold);
+}
+
+.title h1 {
+    font-size: 52px;
+}
+
+.title h2 {
+    font-size: 40px;
+}
+
+.result {
+    margin-top: 14px;
+}
+
+.result p {
+    margin: 2px 0;
+}
+
+.result-label {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--orange);
+}
+
+.result-score {
+    font-size: 22px;
+}
+
+.new-record {
+    font-size: 20px;
+    font-weight: 700;
+    color: #d18b00;
+}
+
+.record {
+    margin: 12px 0 18px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #c79a00;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    font-family: inherit;
+    font-weight: 700;
+    border: 3px solid var(--brown);
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--brown);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.btn:hover {
+    filter: brightness(1.06);
+}
+
+.btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--brown);
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--sky-dark);
+    outline-offset: 2px;
+}
+
+.btn-play {
+    width: 180px;
+    padding: 8px 0;
+    font-size: 26px;
+    color: #fff;
+    background: var(--orange);
+    text-shadow: 1px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.btn-reset {
+    width: 180px;
+    padding: 6px 0;
+    font-size: 15px;
+    color: var(--brown);
+    background: var(--cream);
 }
